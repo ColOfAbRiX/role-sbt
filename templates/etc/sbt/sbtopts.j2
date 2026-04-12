@@ -44,17 +44,15 @@
 -java-home {{ sbt_global_opts.java_home }}
 
 {% endif %}
-{% if sbt_global_opts.boot is defined %}
-{% if sbt_global_opts.boot.directory is defined %}
+{% if sbt_global_opts['boot.directory'] is defined %}
 # Path to shared boot directory.
--Dsbt.boot.directory={{ sbt_global_opts.boot.directory }}
+-Dsbt.boot.directory={{ sbt_global_opts['boot.directory'] }}
 
 {% endif %}
-{% if sbt_global_opts.boot.properties is defined %}
+{% if sbt_global_opts['boot.properties'] is defined %}
 # The path to find the sbt boot properties file.
--Dsbt.boot.properties={{ sbt_global_opts.boot.properties }}
+-Dsbt.boot.properties={{ sbt_global_opts['boot.properties'] }}
 
-{% endif %}
 {% endif %}
 {% if sbt_global_opts.ci is defined %}
 # For continuous integration environments. Suppress supershell and color.
@@ -71,16 +69,14 @@
 
 {% endif %}
 {% if sbt_global_opts.coursier is defined %}
-{% if sbt_global_opts.coursier.enabled is defined %}
 # Use coursier to retrieve packages.
-{{ sbt_flag('sbt.coursier', sbt_global_opts.coursier.enabled) }}
+{{ sbt_flag('sbt.coursier', sbt_global_opts.coursier) }}
 
 {% endif %}
-{% if sbt_global_opts.coursier.home is defined %}
+{% if sbt_global_opts['coursier.home'] is defined %}
 # Location of coursier artifact cache.
--Dsbt.coursier.home={{ sbt_global_opts.coursier.home }}
+-Dsbt.coursier.home={{ sbt_global_opts['coursier.home'] }}
 
-{% endif %}
 {% endif %}
 {% if sbt_global_opts.extraClasspath is defined %}
 # Jar files or directories that are added to sbt's classpath.
@@ -92,92 +88,69 @@
 {{ sbt_flag('sbt.genbuildprops', sbt_global_opts.genbuildprops) }}
 
 {% endif %}
-{% if sbt_global_opts.global is defined %}
-{% if sbt_global_opts.global.base is defined %}
+{% if sbt_global_opts['global.base'] is defined %}
 # The directory containing global settings and plugins.
--Dsbt.global.base={{ sbt_global_opts.global.base }}
+-Dsbt.global.base={{ sbt_global_opts['global.base'] }}
 
 {% endif %}
-{% endif %}
-{% if sbt_global_opts.inc is defined %}
-{% if sbt_global_opts.inc.debug is defined %}
+{% if sbt_global_opts['inc.debug'] is defined %}
 # Extra debugging for the incremental debugger.
-{{ sbt_flag('xsbt.inc.debug', sbt_global_opts.inc.debug) }}
+{{ sbt_flag('xsbt.inc.debug', sbt_global_opts['inc.debug']) }}
 
-{% endif %}
 {% endif %}
 {% if sbt_global_opts.ivy is defined %}
-{% if sbt_global_opts.ivy.enabled is defined %}
 # Use ivy to retrieve packages.
-{{ sbt_flag('sbt.ivy', sbt_global_opts.ivy.enabled) }}
+{{ sbt_flag('sbt.ivy', sbt_global_opts.ivy) }}
 
 {% endif %}
-{% if sbt_global_opts.ivy.home is defined %}
+{% if sbt_global_opts['ivy.home'] is defined %}
 # The directory containing the local Ivy repository and artifact cache.
--Dsbt.ivy.home={{ sbt_global_opts.ivy.home }}
+-Dsbt.ivy.home={{ sbt_global_opts['ivy.home'] }}
 
 {% endif %}
-{% endif %}
-{% if sbt_global_opts.log is defined %}
-{% if sbt_global_opts.log.noformat is defined %}
+{% if sbt_global_opts['log.noformat'] is defined %}
 # If true, disable ANSI color codes.
-{{ sbt_flag('sbt.log.noformat', sbt_global_opts.log.noformat) }}
+{{ sbt_flag('sbt.log.noformat', sbt_global_opts['log.noformat']) }}
 
 {% endif %}
-{% endif %}
-{% if sbt_global_opts.main is defined %}
-{% if sbt_global_opts.main.class is defined %}
+{% if sbt_global_opts['main.class'] is defined %}
 # The sbt class to use.
--Dsbt.main.class={{ sbt_global_opts.main.class }}
+-Dsbt.main.class={{ sbt_global_opts['main.class'] }}
 
-{% endif %}
 {% endif %}
 {% if sbt_global_opts.offline is defined %}
 # Avoid retrieving classes from repositories.
 {{ sbt_flag('sbt.offline', sbt_global_opts.offline) }}
 
 {% endif %}
-{% if sbt_global_opts.override is defined %}
-{% if sbt_global_opts.override.build is defined %}
-{% if sbt_global_opts.override.build.repos is defined %}
+{% if sbt_global_opts['override.build.repos'] is defined %}
 # If true, repositories configured in a build definition are ignored.
-{{ sbt_flag('sbt.override.build.repos', sbt_global_opts.override.build.repos) }}
+{{ sbt_flag('sbt.override.build.repos', sbt_global_opts['override.build.repos']) }}
 
-{% endif %}
-{% endif %}
 {% endif %}
 {% if sbt_global_opts.progress is defined %}
 # Use always to show progress ("supershell").
 -Dsbt.progress={{ sbt_global_opts.progress }}
 
 {% endif %}
-{% if sbt_global_opts.repository is defined %}
-{% if sbt_global_opts.repository.config is defined %}
+{% if sbt_global_opts['repository.config'] is defined %}
 # A file containing the repositories to use for the launcher.
--Dsbt.repository.config={{ sbt_global_opts.repository.config }}
+-Dsbt.repository.config={{ sbt_global_opts['repository.config'] }}
 
 {% endif %}
-{% endif %}
-{% if sbt_global_opts.resident is defined %}
-{% if sbt_global_opts.resident.limit is defined %}
+{% if sbt_global_opts['resident.limit'] is defined %}
 # The number of scala compilers to keep around.
--Dsbt.resident.limit={{ sbt_global_opts.resident.limit }}
+-Dsbt.resident.limit={{ sbt_global_opts['resident.limit'] }}
 
 {% endif %}
-{% endif %}
-{% if sbt_global_opts.skip is defined %}
-{% if sbt_global_opts.skip.version is defined %}
-{% if sbt_global_opts.skip.version.write is defined %}
+{% if sbt_global_opts['skip.version.write'] is defined %}
 # Generate build.properties if missing.
-{{ sbt_flag('sbt.skip.version.write', sbt_global_opts.skip.version.write) }}
+{{ sbt_flag('sbt.skip.version.write', sbt_global_opts['skip.version.write']) }}
 
-{% endif %}
-{% endif %}
 {% endif %}
 {% if sbt_global_opts.supershell is defined %}
-{% if sbt_global_opts.supershell.enabled is defined %}
 # Use supershell (show progress at bottom of shell).
-{{ sbt_flag('sbt.supershell', sbt_global_opts.supershell.enabled) }}
+{{ sbt_flag('sbt.supershell', sbt_global_opts.supershell) }}
 
 {% endif %}
 {% if sbt_global_opts.supershell.sleep is defined %}
@@ -185,29 +158,24 @@
 -Dsbt.supershell.sleep={{ sbt_global_opts.supershell.sleep }}
 
 {% endif %}
-{% endif %}
-{% if sbt_global_opts.task is defined %}
 {% if sbt_global_opts.task.timings is defined %}
-{% if sbt_global_opts.task.timings.enabled is defined %}
 # Measure the time elapsed for running tasks.
-{{ sbt_flag('sbt.task.timings', sbt_global_opts.task.timings.enabled) }}
+{{ sbt_flag('sbt.task.timings', sbt_global_opts['task.timings']) }}
 
 {% endif %}
-{% if sbt_global_opts.task.timings['omit.paths'] is defined %}
+{% if sbt_global_opts['task.timings.omit.paths'] is defined %}
 # Omit paths when reporting timings.
-{{ sbt_flag('sbt.task.timings.omit.paths', sbt_global_opts.task.timings['omit.paths']) }}
+{{ sbt_flag('sbt.task.timings.omit.paths', sbt_global_opts['task.timings.omit.paths']) }}
 
 {% endif %}
-{% if sbt_global_opts.task.timings['on.shutdown'] is defined %}
+{% if sbt_global_opts['task.timings.on.shutdown'] is defined %}
 # Report timings at JVM shutdown (instead of at task completion).
-{{ sbt_flag('sbt.task.timings.on.shutdown', sbt_global_opts.task.timings['on.shutdown']) }}
+{{ sbt_flag('sbt.task.timings.on.shutdown', sbt_global_opts['task.timings.on.shutdown']) }}
 
 {% endif %}
-{% if sbt_global_opts.task.timings.threshold is defined %}
+{% if sbt_global_opts['task.timings.threshold'] is defined %}
 # Omit items from timing report if they are below this threshold.
--Dsbt.task.timings.threshold={{ sbt_global_opts.task.timings.threshold }}
-{% endif %}
-{% endif %}
+-Dsbt.task.timings.threshold={{ sbt_global_opts['task.timings.threshold'] }}
 {% endif %}
 {% if sbt_global_opts.traces is defined %}
 # Generate Chrome Trace Event Format log for tasks.

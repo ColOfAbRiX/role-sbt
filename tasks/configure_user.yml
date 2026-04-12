@@ -7,14 +7,17 @@
   tags: sbt
 
 - name: "Build Information : {{ sbt_user.username }}"
-  ansible.builtin.set_fact:
-    user_home: "{{ getent_passwd[sbt_user.username][4] }}"
-  tags: sbt
+  block:
 
-- name: "Build Information #2 : {{ sbt_user.username }}"
-  ansible.builtin.set_fact:
-    sbt_global_user_dir: '{{ sbt_global_opts.global.base | default("{{ user_home }}/.sbt") }}'
-    sbt_user_dir: "{{ user_home }}/.sbt"
+    - ansible.builtin.set_fact:
+        user_home: "{{ getent_passwd[sbt_user.username][4] }}"
+
+    - ansible.builtin.set_fact:
+        sbt_user_dir: "{{ user_home }}/.sbt"
+
+    - ansible.builtin.set_fact:
+        sbt_global_user_dir: '{{ sbt_global_opts["global.base"] | default(sbt_user_dir) }}'
+
   tags: sbt
 
 - name: "SBT User Directory : {{ sbt_user.username }}"
