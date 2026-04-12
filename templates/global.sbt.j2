@@ -1,4 +1,5 @@
-{{ scala_sbt_global_config }}
 {% if sbt_user.sbt_sonatype.username is defined and sbt_user.sbt_sonatype.password is defined %}
+# User credentials
 credentials += Credentials(new java.io.File("{{ user_home }}/.sbt/sonatype_central_credentials"))
 {% endif %}
+{{ sbt_global_config | default(omit) }}

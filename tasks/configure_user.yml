@@ -1,49 +1,49 @@
 ---
-
 - name: "Get User Home Directory : {{ sbt_user.username }}"
   become: true
   ansible.builtin.getent:
     database: passwd
     key: "{{ sbt_user.username }}"
-  tags: scala
+  tags: sbt
 
 - name: "Build Information : {{ sbt_user.username }}"
   ansible.builtin.set_fact:
     user_home: "{{ getent_passwd[sbt_user.username][4] }}"
-  tags: scala
+  tags: sbt
 
 - name: "Build Information #2 : {{ sbt_user.username }}"
   ansible.builtin.set_fact:
-    sbt_global_user_dir: "{{ scala_sbt_global_opts.global.base | default(\"{{ user_home }}/.sbt\") }}"
-  tags: scala
+    sbt_global_user_dir: '{{ sbt_global_opts.global.base | default("{{ user_home }}/.sbt") }}'
+    sbt_user_dir: "{{ user_home }}/.sbt"
+  tags: sbt
 
-- name: "SBT Home Directory : {{ sbt_user.username }}"
+- name: "SBT User Directory : {{ sbt_user.username }}"
   become: true
   become_user: "{{ sbt_user.username }}"
   ansible.builtin.file:
-    path: "{{ user_home }}/.sbt"
+    path: "{{ sbt_user_dir }}"
     state: directory
-    mode: '0755'
-  tags: scala
+    mode: "0755"
+  tags: sbt
 
 - name: "User-global SBT configuration : {{ sbt_user.username }}"
   template:
-    src: "sbt/global.sbt.j2"
+    src: "global.sbt.j2"
     dest: "{{ sbt_global_user_dir }}/global.sbt"
     owner: "{{ sbt_user.username }}"
     group: "{{ sbt_user.username }}"
     mode: "0644"
-  tags: scala
+  tags: sbt
 
 - name: "User SBT Sonatype Credentials : {{ sbt_user.username }}"
   become: true
   become_user: "{{ sbt_user.username }}"
   template:
-    src: "sbt/sonatype_central_credentials.j2"
-    dest: "{{ user_home }}/.sbt/sonatype_central_credentials"
+    src: "sonatype_central_credentials.j2"
+    dest: "{{ sbt_user_dir }}"
     owner: "{{ sbt_user.username }}"
     group: "{{ sbt_user.username }}"
     mode: "0644"
   when:
     - sbt_user.sbt_sonatype is defined
-  tags: scala
+  tags: sbt

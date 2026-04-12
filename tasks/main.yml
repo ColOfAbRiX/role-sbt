@@ -4,53 +4,28 @@
     that: ansible_distribution == 'Ubuntu' and ansible_distribution_version is version('22.0.0', '>=')
     msg: "This Linux distribution '{{ ansible_distribution }} {{ ansible_distribution_version }}' is not supported by the role."
     quiet: true
-  tags: scala
+  tags: sbt
 
 - name: "Include OS-Specific Variables"
   include_vars: "vars-{{ ansible_distribution | lower }}.yml"
-  tags: scala
+  tags: sbt
 
 - name: "Run OS-Specific Tasks"
   include_tasks: "tasks-{{ ansible_distribution | lower }}.yml"
-  tags: scala
+  tags: sbt
 
-- name: "Set Scala URLs"
-  set_fact:
-    ammonite_url: "https://github.com/lihaoyi/Ammonite/releases/download/{{ scala_ammonite_version }}/{{ scala_version | regex_replace('\\.\\d+$', '') }}-{{ scala_ammonite_version }}"
-    cacheable: false
-  tags: scala
+- name: "Global SBT Options"
+  template:
+    src: etc/sbt/sbtopts.j2
+    dest: /etc/sbt/sbtopts
+    owner: root
+    group: root
+    mode: "0644"
+  tags: sbt
 
-##  Ammonite  ##
-
-- name: "Check Ammonite executable"
-  stat:
-    path: /usr/local/bin/amm
-  register: ammonite_exec_check
-  tags: scala
-
-- name: "Install Ammonite"
-  block:
-    - name: "Download Ammonite"
-      get_url:
-        url: "{{ ammonite_url }}"
-        dest: /usr/local/bin/amm
-        validate_certs: false
-        owner: root
-        group: root
-        mode: "0755"
-
-    - name: "Ammonite Directory"
-      become: false
-      file:
-        path: ~/.ammonite
-        state: directory
-
-    - name: "Ammonite Configuration"
-      become: false
-      template:
-        src: ammonite_predef.sc.j2
-        dest: ~/.ammonite/predef.sc
-
-  when: not ammonite_exec_check.stat.exists or
-    scala_ammonite_force_install | default(False) | bool
-  tags: scala
+- name: Configure users
+  ansible.builtin.include_tasks: configure_user.yml
+  loop: "{{ sbt_users }}"
+  loop_control:
+    loop_var: sbt_user
+  tags: sbt

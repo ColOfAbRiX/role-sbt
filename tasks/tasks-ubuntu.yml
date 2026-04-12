@@ -1,27 +1,18 @@
 ---
-- name: "Set Scala URLs"
-  set_fact:
-    scala_package_url: "https://scala-lang.org/files/archive/scala-{{ scala_version }}.deb"
-    scala_sbt_dependencies:
-      - apt-transport-https
-      - curl
-      - gnupg
-  tags: scala
+- name: "Check if SBT is already installed"
+  ansible.builtin.command: "which sbt"
+  failed_when: false
+  register: sbt_current
+  changed_when: false
+  check_mode: false
+  tags: sbt
 
-# ##  SBT  ##
-
-- name: "Install SBT"
+- name: "Configure APT"
   block:
-    - name: "Check if SBT is already installed"
-      ansible.builtin.command: "which sbt"
-      failed_when: false
-      register: sbt_current
-      changed_when: false
-      check_mode: false
 
     - name: "Install APT dependencies"
       apt:
-        name: "{{ scala_sbt_dependencies }}"
+        name: "{{ sbt_dependencies }}"
         state: present
 
     - name: "Add SBT repository"
@@ -30,7 +21,6 @@
         line: "deb https://repo.scala-sbt.org/scalasbt/debian all main"
         create: true
         state: present
-      when: sbt_current.rc != 0
 
     - name: "Add SBT legacy repository"
       lineinfile:
@@ -38,57 +28,17 @@
         line: "deb https://repo.scala-sbt.org/scalasbt/debian /"
         create: true
         state: present
-      when: sbt_current.rc != 0
 
     - name: "Import SBT Ubuntu GPG key"
       apt_key:
         url: "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x2EE0EA64E40A89B84B2DF73499E82A75642AC823"
         state: present
-      when: sbt_current.rc != 0
 
-    - name: "Install SBT"
-      apt:
-        name: sbt
-        state: present
+  when: sbt_current.rc != 0
+  tags: sbt
 
-    - name: "Global SBT Options"
-      template:
-        src: "sbt/sbtopts.j2"
-        dest: /etc/sbt/sbtopts
-        owner: root
-        group: root
-        mode: "0644"
-
-    - name: Configure users
-      ansible.builtin.include_tasks: configure_user.yml
-      loop: "{{ scala_sbt_users }}"
-      loop_control:
-        loop_var: sbt_user
-
-  when: scala_sbt_install | default(true)
-  tags: scala
-
-##  Scala  ##
-
-- name: "Install Scala"
-  become: true
-  block:
-
-    - name: Unarchive Scala to /opt
-      ansible.builtin.unarchive:
-        src: "https://github.com/scala/scala3/releases/download/{{ scala_version }}/scala3-{{ scala_version }}.tar.gz"
-        dest: /opt
-        remote_src: yes
-        creates: "/opt/scala3-{{ scala_version }}"
-
-    - name: Create symlinks in /usr/local/bin
-      ansible.builtin.file:
-        src: "/opt/scala3-{{ scala_version }}/bin/{{ item }}"
-        dest: "/usr/local/bin/{{ item }}"
-        state: link
-      loop:
-        - scala
-        - scalac
-        - scaladoc
-
-  tags: scala
+- name: "Install SBT"
+  apt:
+    name: sbt
+    state: present
+  tags: sbt

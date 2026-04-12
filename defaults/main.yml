@@ -1,21 +1,14 @@
 ---
-# defaults file for scala
-
-# Scala
-scala_version: 3.8.2
-scala_force_install: false
-
-# SBT
-scala_sbt_install: true
-
-scala_sbt_users: []
+# Configuration specific for each user
+sbt_users: []
 #  - username: fabrizio
 #    sbt_sonatype:
 #      username: sona_fabrizio
 #      password: Passw0rd
 
+# System global SBT options
 # See https://www.scala-sbt.org/1.x/docs/Command-Line-Reference.html#Other+system+properties
-scala_sbt_global_opts: {}
+sbt_global_opts: {}
   # # Starts sbt even if the current directory contains no sbt project.
   # allow_empty: true
   # # Set memory options
@@ -110,8 +103,5 @@ scala_sbt_global_opts: {}
   # # Extra JVM properties
   # jvm_properties: {}
 
-scala_sbt_global_config: ""
-
-# Ammonite
-scala_ammonite_version: 3.0.8
-scala_ammonite_force_install: false
+# User-global SBT configuration
+sbt_global_config: ""
