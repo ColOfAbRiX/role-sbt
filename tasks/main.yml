@@ -6,12 +6,22 @@
     quiet: true
   tags: sbt
 
-- name: "Include OS-Specific Variables"
-  include_vars: "vars-{{ ansible_distribution | lower }}.yml"
+- name: "Load Variables"
+  ansible.builtin.include_vars: "{{ lookup('first_found', files) }}"
+  vars:
+    files:
+      - "vars/vars-{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version }}.yml"
+      - "vars/vars-{{ ansible_distribution | lower }}.yml"
+      - "vars/vars-{{ ansible_os_family | lower }}.yml"
   tags: sbt
 
-- name: "Run OS-Specific Tasks"
-  include_tasks: "tasks-{{ ansible_distribution | lower }}.yml"
+- name: "Run Environment Tasks"
+  ansible.builtin.include_tasks: "{{ lookup('first_found', files) }}"
+  vars:
+    files:
+      - "tasks/tasks-{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
+      - "tasks/tasks-{{ ansible_distribution | lower }}.yml"
+      - "tasks/tasks-{{ ansible_os_family | lower }}.yml"
   tags: sbt
 
 - name: "Global SBT Options"

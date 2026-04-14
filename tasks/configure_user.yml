@@ -43,7 +43,7 @@
   become_user: "{{ sbt_user.username }}"
   template:
     src: "sonatype_central_credentials.j2"
-    dest: "{{ sbt_user_dir }}"
+    dest: "{{ sbt_user_dir }}/sonatype_central_credentials"
     owner: "{{ sbt_user.username }}"
     group: "{{ sbt_user.username }}"
     mode: "0644"
