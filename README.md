@@ -50,7 +50,7 @@ User-global SBT configuration appended to each user's `~/.sbt/global.sbt`. Use t
         - username: fabrizio
           sbt_sonatype:
             username: ColOfAbRiX
-            password: uGlZO4yaDnVz=%j
+            password: Passw0rd
       sbt_global_opts:
         allow_empty: true
         no_share: true
