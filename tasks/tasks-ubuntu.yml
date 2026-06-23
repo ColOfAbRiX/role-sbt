@@ -37,6 +37,6 @@
 
 - name: "Install SBT"
   apt:
-    name: sbt
+    name: "{% if sbt_global_version is defined %}sbt={{ sbt_global_version }}{% else %}sbt{% endif %}"
     state: present
   tags: sbt

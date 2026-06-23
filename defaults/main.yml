@@ -6,6 +6,8 @@ sbt_users: []
 #      username: sona_fabrizio
 #      password: Passw0rd
 
+#sbt_global_version: 1.12.12
+
 # System global SBT options
 # See https://www.scala-sbt.org/1.x/docs/Command-Line-Reference.html#Other+system+properties
 sbt_global_opts: {}

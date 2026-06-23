@@ -26,7 +26,7 @@
 {% endif %}
 {% if sbt_global_opts.sbt_version is defined %}
 # Sets the sbt version to use.
--sbt-version {{ sbt_global_opts.sbt_version }}
+-sbt-version {% if sbt_global_version is defined %}{{ sbt_global_version }}{% else %}{{ sbt_global_opts.sbt_version }}{% endif %}
 
 {% endif %}
 {% if sbt_global_opts.scala_home is defined %}
